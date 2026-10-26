@@ -1,0 +1,458 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinGuard | Financial Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">◆</div>
+                <span>FinGuard</span>
+            </div>
+
+            <div class="nav-label">WORKSPACE</div>
+
+            
+<nav>
+    <a href="#dashboard" class="nav-link active">
+        <span>▦</span> Dashboard
+    </a>
+
+    <a href="#accounts" class="nav-link">
+        <span>▣</span> Accounts
+    </a>
+
+    <a href="#transactions" class="nav-link">
+        <span>⇄</span> Transactions
+    </a>
+
+    <!-- New Budget Navigation Link -->
+    <a href="#budgets" class="nav-link">
+        <span>◫</span> Budgets
+    </a>
+
+    <a href="#goals" class="nav-link">
+        <span>◎</span> Savings Goals
+    </a>
+
+    <a href="#risk-alerts" class="nav-link">
+        <span>⚠</span> Risk Alerts
+    </a>
+
+    <a href="#audit-logs" class="nav-link">
+        <span>📋</span> Audit Trail
+    </a>
+</nav>
+
+
+            <div class="sidebar-bottom">
+                <div class="user-avatar">FG</div>
+                <div>
+                    <strong>FinGuard</strong>
+                    <small>Development Account</small>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">FINANCIAL WORKSPACE</p>
+                    <h1>Overview</h1>
+                    <p class="subtitle">
+                        Your finances, all in one place.
+                    </p>
+                </div>
+
+                <div class="top-actions">
+                    <span class="live-indicator">● Live Data</span>
+                    <button id="refreshBtn" class="secondary-btn">
+                        ↻ Refresh
+                    </button>
+                </div>
+            </header>
+
+            <div id="errorMessage" class="error-message" hidden></div>
+
+            
+<!-- Quick Actions -->
+<section class="quick-actions">
+    <div>
+        <h3>Quick Actions</h3>
+        <p>Manage your money in a few clicks</p>
+    </div>
+
+    <div class="action-buttons">
+        <button type="button" id="addIncomeBtn" class="action-btn income-btn">
+            + Add Income
+        </button>
+        <button type="button" id="addExpenseBtn" class="action-btn expense-btn">
+            − Add Expense
+        </button>
+        <button type="button" id="transferBtn" class="action-btn transfer-btn">
+    ⇄ Transfer Money
+</button>
+    </div>
+</section>
+
+<!-- Transaction Form Modal -->
+<div id="transactionModal" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog"
+         aria-modal="true" aria-labelledby="modalTitle">
+
+        <div class="modal-header">
+            <h2 id="modalTitle">Add Transaction</h2>
+            <button type="button" id="closeModalBtn"
+                    class="close-btn" aria-label="Close">×</button>
+        </div>
+
+        <form id="transactionForm">
+            <label for="transactionAccount">Select Account</label>
+            <select id="transactionAccount" required></select>
+
+            <label for="transactionAmount">Amount (₹)</label>
+            <input id="transactionAmount" type="number"
+                   min="0.01" max="9999999999999.99"
+                   step="0.01" placeholder="e.g. 1500" required>
+
+            <label for="transactionCategory">Category</label>
+            <select id="transactionCategory" required></select>
+
+            <label for="transactionDescription">Description (Optional)</label>
+            <input id="transactionDescription" type="text"
+                   maxlength="255" placeholder="Enter description">
+
+            <div id="formError" class="form-error" hidden></div>
+
+            <button type="submit" id="saveTransactionBtn"
+                    class="submit-btn">
+                Save Transaction
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<!-- Transfer Money Modal -->
+<div id="transferModal" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog"
+         aria-modal="true" aria-labelledby="transferTitle">
+
+        <div class="modal-header">
+            <h2 id="transferTitle">Transfer Money</h2>
+            <button type="button" id="closeTransferBtn"
+                    class="close-btn" aria-label="Close">×</button>
+        </div>
+
+        <form id="transferForm">
+            <label for="transferFrom">From Account</label>
+            <select id="transferFrom" required></select>
+
+            <label for="transferTo">To Account</label>
+            <select id="transferTo" required></select>
+
+            <label for="transferAmount">Amount (₹)</label>
+            <input id="transferAmount" type="number"
+                   min="0.01" max="9999999999999.99"
+                   step="0.01" required>
+
+            <label for="transferDescription">Description</label>
+            <input id="transferDescription" type="text"
+                   maxlength="255"
+                   placeholder="e.g. Transfer to wallet">
+
+            <div id="transferError" class="form-error" hidden></div>
+
+            <button type="submit" id="saveTransferBtn"
+                    class="submit-btn">
+                Transfer Money
+            </button>
+        </form>
+    </div>
+</div>
+
+
+
+            <section id="dashboard" class="stats-grid">
+                <div class="stat-card featured">
+                    <p>Total Balance</p>
+                    <h2 id="totalBalance">₹0.00</h2>
+                    <span>Across all financial accounts</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Total Income</p>
+                    <h2 id="totalIncome" class="income">₹0.00</h2>
+                    <span>Recorded income transactions</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Total Expenses</p>
+                    <h2 id="totalExpense" class="expense">₹0.00</h2>
+                    <span>Recorded expense transactions</span>
+                </div>
+
+                <div class="stat-card">
+                    <p>Active Accounts</p>
+                    <h2 id="totalAccounts">0</h2>
+                    <span>Connected financial accounts</span>
+                </div>
+            </section>
+
+            <div class="content-grid">
+                <section id="accounts" class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Your Accounts</h3>
+                            <p>Balances across your wallets</p>
+                        </div>
+                    </div>
+
+                    <div id="accountsList" class="accounts-list">
+                        <p class="empty-state">Loading accounts...</p>
+                    </div>
+                </section>
+
+                <section class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3>Cash Flow</h3>
+                            <p>Income versus expenses</p>
+                        </div>
+                    </div>
+
+                    <div class="cashflow">
+                        <div class="cashflow-row">
+                            <span>Income</span>
+                            <strong id="incomeLabel">₹0</strong>
+                        </div>
+                        <div class="progress-track">
+                            <div id="incomeBar" class="progress-fill income-fill"></div>
+                        </div>
+
+                        <div class="cashflow-row">
+                            <span>Expenses</span>
+                            <strong id="expenseLabel">₹0</strong>
+                        </div>
+                        <div class="progress-track">
+                            <div id="expenseBar" class="progress-fill expense-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="cashflow-note">
+                        Based on all recorded income and expense transactions.
+                    </div>
+                </section>
+            </div>
+
+            
+<!-- Budget Management -->
+<section id="budgets" class="panel budget-panel">
+    <div class="panel-header">
+        <div>
+            <h3>Monthly Budgets</h3>
+            <p>Track spending and stay within your limits</p>
+        </div>
+        <button type="button" id="addBudgetBtn"
+                class="secondary-btn">+ Set Budget</button>
+    </div>
+
+    <div id="budgetsList" class="budgets-grid">
+        <p class="empty-state">Loading budgets...</p>
+    </div>
+</section>
+
+<!-- Budget Modal -->
+<div id="budgetModal" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog"
+         aria-modal="true" aria-labelledby="budgetTitle">
+        <div class="modal-header">
+            <h2 id="budgetTitle">Set Monthly Budget</h2>
+            <button type="button" id="closeBudgetBtn"
+                    class="close-btn" aria-label="Close">×</button>
+        </div>
+
+        <form id="budgetForm" class="finance-form">
+            <label for="budgetCategory">Category</label>
+            <select id="budgetCategory" required>
+                <option value="Food">Food</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Transport">Transport</option>
+                <option value="Bills">Bills</option>
+                <option value="Education">Education</option>
+                <option value="Health">Health</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="budgetLimit">Monthly Limit (₹)</label>
+            <input id="budgetLimit" type="number"
+                   min="0.01" max="9999999999999.99"
+                   step="0.01" required>
+
+            <div id="budgetError" class="form-error" hidden></div>
+
+            <button id="saveBudgetBtn" type="submit"
+                    class="submit-btn">Save Budget</button>
+        </form>
+    </div>
+</div>
+
+
+<!-- Savings Goals Section -->
+<section id="goals" class="panel goals-panel">
+    <div class="panel-header">
+        <div>
+            <h3>Savings Goals</h3>
+            <p>Plan your future and track savings progress</p>
+        </div>
+
+        <button type="button" id="addGoalBtn"
+                class="secondary-btn">
+            + Create Goal
+        </button>
+    </div>
+
+    <div id="goalsList" class="goals-grid">
+        <p class="empty-state">Loading savings goals...</p>
+    </div>
+</section>
+
+<!-- Create Goal Modal -->
+<div id="goalModal" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog"
+         aria-modal="true" aria-labelledby="goalModalTitle">
+
+        <div class="modal-header">
+            <h2 id="goalModalTitle">Create Savings Goal</h2>
+            <button type="button" id="closeGoalBtn"
+                    class="close-btn">×</button>
+        </div>
+
+        <form id="goalForm" class="finance-form">
+            <label for="goalName">Goal Name</label>
+            <input id="goalName" type="text" maxlength="100"
+                   placeholder="e.g. New Laptop" required>
+
+            <label for="goalTarget">Target Amount (₹)</label>
+            <input id="goalTarget" type="number" min="0.01"
+                   max="9999999999999.99" step="0.01" required>
+
+            <label for="goalDate">Target Date (Optional)</label>
+            <input id="goalDate" type="date">
+
+            <div id="goalError" class="form-error" hidden></div>
+
+            <button type="submit" id="saveGoalBtn"
+                    class="submit-btn">
+                Create Goal
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Add Savings Modal -->
+<div id="goalSavingsModal" class="modal-overlay" hidden>
+    <div class="modal-card" role="dialog"
+         aria-modal="true" aria-labelledby="savingsModalTitle">
+
+        <div class="modal-header">
+            <h2 id="savingsModalTitle">Add Savings</h2>
+            <button type="button" id="closeSavingsBtn"
+                    class="close-btn">×</button>
+        </div>
+
+        <form id="goalSavingsForm" class="finance-form">
+            <p id="selectedGoalName"></p>
+
+            <label for="savingsAmount">Amount (₹)</label>
+            <input id="savingsAmount" type="number" min="0.01"
+                   max="9999999999999.99" step="0.01" required>
+
+            <div id="savingsError" class="form-error" hidden></div>
+
+            <button type="submit" id="saveSavingsBtn"
+                    class="submit-btn">
+                Add Savings
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<!-- Financial Risk Alerts -->
+<section id="risk-alerts" class="panel risk-panel">
+    <div class="panel-header">
+        <div>
+            <h3>Financial Risk Alerts</h3>
+            <p>Automatic transaction monitoring</p>
+        </div>
+        <span id="riskAlertCount" class="section-tag">0 Alerts</span>
+    </div>
+
+    <div id="riskAlertsList" class="risk-alerts-list">
+        <p class="empty-state">Loading risk alerts...</p>
+    </div>
+</section>
+
+
+<!-- Financial Audit Logs -->
+<section id="audit-logs" class="panel audit-panel">
+    <div class="panel-header">
+        <div>
+            <h3>Financial Audit Trail</h3>
+            <p>Account balance changes tracked</p>
+        </div>
+        <span id="auditLogCount" class="section-tag">0 Records</span>
+    </div>
+
+    <div id="auditLogsList" class="audit-logs-list">
+        <p class="empty-state">Loading audit records...</p>
+    </div>
+</section>
+
+
+
+            <section id="transactions" class="panel transactions-panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Recent Transactions</h3>
+                        <p>Your latest financial activity</p>
+                    </div>
+                    <span class="section-tag">Oracle Database</span>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Transaction</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody">
+                            <tr>
+                                <td colspan="5">Loading transactions...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <footer>
+                FinGuard © 2026 · Personal Financial Management System
+            </footer>
+        </main>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>

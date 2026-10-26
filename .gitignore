@@ -1,0 +1,25 @@
+# Database passwords and secret keys
+.env
+.env.*
+!.env.example
+
+# Python virtual environments
+venv/
+.venv/
+
+# Python generated files
+__pycache__/
+*.pyc
+
+# VS Code local configuration
+.vscode/
+
+# Temporary files
+*.log
+*.tmp
+
+# Backup files
+*_backup.py
+
+# Windows files
+Thumbs.db

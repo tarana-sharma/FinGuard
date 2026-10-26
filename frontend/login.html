@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | FinGuard</title>
+    <link rel="stylesheet" href="/auth.css">
+    <script src="/auth.js" defer></script>
+</head>
+<body>
+    <main class="auth-container">
+        <section class="brand-panel">
+            <div class="brand">◈ FinGuard</div>
+            <div class="brand-content">
+                <span class="eyebrow">YOUR FINANCIAL COMPANION</span>
+                <h1>Take control of your financial future.</h1>
+                <p>
+                    Manage accounts, track expenses, plan budgets,
+                    and protect your finances in one place.
+                </p>
+                <div class="features">
+                    <span>✓ Smart Budgeting</span>
+                    <span>✓ Savings Goals</span>
+                    <span>✓ Risk Monitoring</span>
+                    <span>✓ Financial Insights</span>
+                </div>
+            </div>
+            <p class="brand-footer">FinGuard • Personal Finance Management</p>
+        </section>
+
+        <section class="form-panel">
+            <div class="auth-card">
+                <div class="mobile-brand">◈ FinGuard</div>
+
+                <div class="auth-tabs">
+                    <button id="loginTab" class="tab active" type="button">
+                        Sign In
+                    </button>
+                    <button id="registerTab" class="tab" type="button">
+                        Create Account
+                    </button>
+                </div>
+
+                <h2 id="formTitle">Welcome back</h2>
+                <p id="formSubtitle" class="subtitle">
+                    Sign in to access your financial dashboard.
+                </p>
+
+                <form id="authForm">
+                    <div id="nameGroup" class="field hidden">
+                        <label for="fullName">Full Name</label>
+                        <input id="fullName" type="text"
+                               autocomplete="name"
+                               placeholder="Enter your full name">
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email Address</label>
+                        <input id="email" type="email" required
+                               autocomplete="email"
+                               placeholder="you@example.com">
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" required
+                               minlength="8"
+                               autocomplete="current-password"
+                               placeholder="Enter your password">
+                    </div>
+
+                    <p id="authMessage" class="auth-message"
+                       role="status" aria-live="polite"></p>
+
+                    <button id="submitBtn" class="submit-btn" type="submit">
+                        Sign In
+                    </button>
+                </form>
+
+                <p class="auth-note">
+                    Secure financial management powered by FinGuard.
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
